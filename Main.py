@@ -10,8 +10,9 @@ class HydraApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Hydra JoinSim")
-        self.root.geometry("800x500")
-        self.root.minsize(800, 500)
+        self.root.geometry("1000x500")
+        self.root.minsize(1000, 500)
+
 
         # Centraliza a janela
         self.center_window()
