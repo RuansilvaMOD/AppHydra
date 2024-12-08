@@ -1,6 +1,8 @@
 import tkinter as tk
 import pygetwindow as gw
 import ctypes
+import os
+import pyautogui
 import pyautogui as pag
 import threading
 import keyboard
@@ -12,6 +14,14 @@ class PasteBot:
         self.frame = None
         self.is_active = False
         self.stop_event = threading.Event()  # Evento para sinalizar a interrupção
+        self.search_path = self.get_image_path('Inv.png')
+
+    def get_image_path(self, image_name):
+        """Obtém o caminho da imagem relativo ao diretório do script."""
+        # Obtém o diretório do script atual
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        # Define o caminho da imagem (assumindo que a pasta 'images' está no mesmo diretório que o script)
+        return os.path.join(script_dir, '..', 'images', image_name)
 
     def create_content(self):
         """Cria o conteúdo da categoria PasteBot."""
@@ -78,37 +88,50 @@ class PasteBot:
                             return  # Interrompe imediatamente se o evento de parada for sinalizado
 
                         pag.keyDown('down')
-                        pag.sleep(3)
+                        pag.sleep(4)
                         pag.keyUp('down')
 
                         pag.press('r')
-                        pag.sleep(2)
+                        pag.sleep(5)
+                        pag.keyDown('up')
+                        pag.sleep(0.4)
+                        pag.keyUp('up')
 
-                        pag.keyDown('down')
-                        pag.sleep(0.1)
-                        pag.keyUp('down')
-
-                        for _ in range(10):
+                        for _ in range(15):
                             if self.stop_event.is_set():
                                 return  # Interrompe imediatamente se o evento de parada for sinalizado
 
                             pag.press('f')
-                            pag.sleep(2)
-                            pag.click(1272, 197)
-                            print("search clicado.")
+                            pag.sleep(3)
 
-                            pag.sleep(2)
-                            pag.write('achat')
-                            print("Texto 'achat' escrito.")
+                            try:
+                                # Tenta localizar a imagem na tela
+                                posicao = pyautogui.locateOnScreen(self.search_path, confidence=0.8)
 
-                            pag.sleep(2)
-                            pag.click(1372, 192)
-                            pag.press('f')
-                            print("transfer clicado.")
+                                if posicao:
+                                    print("Imagem encontrada!")
+                                    # Faça algo quando a imagem for encontrada
 
-                            pag.sleep(2)
+                                    pag.click(1272, 197)
+                                    print("search clicado.")
+
+                                    pag.sleep(3)
+                                    pag.write('pa')
+                                    print("Texto 'achat' escrito.")
+
+                                    pag.sleep(3)
+                                    pag.click(1372, 192)
+                                    pag.sleep(0.2)
+                                    pag.press('f')
+                                    print("transfer clicado.")
+
+                            except pyautogui.ImageNotFoundException:
+                                print("Erro: Imagem não encontrada ou algo deu errado!")
+                                # Faça algo se der erro ao procurar a imagem
+
+                            pag.sleep(3)
                             pag.keyDown('left')
-                            pag.sleep(0.2)
+                            pag.sleep(0.32)
                             pag.keyUp('left')
 
                     if self.stop_event.is_set():
@@ -119,11 +142,15 @@ class PasteBot:
                     pag.keyUp('down')
                     pag.press('r')
                     pag.sleep(2)
+                    pag.keyDown('up')
+                    pag.sleep(0.4)
+                    pag.keyUp('up')
 
                     for _ in range(10):
                         if self.stop_event.is_set():
                             return  # Interrompe imediatamente se o evento de parada for sinalizado
 
+                        pag.sleep(1)
                         pag.press('e')
                         pag.sleep(2)
                         pag.keyDown('left')
@@ -132,6 +159,7 @@ class PasteBot:
 
             else:
                 print("Janela do ArkAscended não encontrada.")
+
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
 
